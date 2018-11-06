@@ -1,6 +1,4 @@
 {
   "Username": "username",
   "Password": "password",
-  "Authentication": "Basic",
-  //"Authentication": "OAuth"
 }
