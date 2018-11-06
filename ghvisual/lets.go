@@ -1,4 +1,4 @@
-package main
+package ghvisual
 
 import (
 	"encoding/json"
@@ -15,7 +15,7 @@ const userAddr = "https://api.github.com/user"
 
 type Configuration struct {
 	Username string
-	Token string
+	Token    string
 }
 
 type Json struct {
@@ -35,13 +35,15 @@ func main() {
 	}
 
 	data := Json{}
-	getJson(config, userAddr, &data)
+	GetJson(config, userAddr, &data)
 	fmt.Println(data.Repos_url)
 }
 
 var myClient = &http.Client{Timeout: 10 * time.Second}
 
-func getJson(config Configuration, url string, target interface{}) error {
+// Makes a HTTP GET request to the passed in URL. Parses JSON data from the body of the response
+// and writes matching entries to a passed in struct.
+func GetJson(config Configuration, url string, target interface{}) error {
 	request, err := http.NewRequest("GET", url, nil)
 	if err != nil {
 		fmt.Println(err)
