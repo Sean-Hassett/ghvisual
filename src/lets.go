@@ -15,7 +15,7 @@ const userAddr = "https://api.github.com/user"
 
 type Configuration struct {
 	Username string
-	Password string
+	Token string
 }
 
 type Json struct {
@@ -47,7 +47,7 @@ func getJson(config Configuration, url string, target interface{}) error {
 		fmt.Println(err)
 	}
 	request.Header.Set("User-Agent", userAgent)
-	request.SetBasicAuth(config.Username, config.Password)
+	request.SetBasicAuth(config.Username, config.Token)
 
 	response, err := myClient.Do(request)
 	if err != nil {
