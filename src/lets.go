@@ -5,32 +5,49 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"os"
 	"time"
 )
 
+const configFile = "./config/config.json"
 const userAgent = "Sean-Hassett_ghvisual"
-const addr = "https://api.github.com"
+const userAddr = "https://api.github.com/user"
+
+type Configuration struct {
+	Username string
+	Password string
+}
 
 type Json struct {
-	Current_user_url string
-	Starred_url      string
+	Repos_url string
 }
 
 func main() {
+	file, err := os.Open(configFile)
+	if err != nil {
+		log.Fatalln(err)
+	}
+	decoder := json.NewDecoder(file)
+	config := Configuration{}
+	err = decoder.Decode(&config)
+	if err != nil {
+		log.Fatalln(err)
+	}
+
 	data := Json{}
-	getJson(addr, &data)
-	fmt.Println(data.Current_user_url)
-	fmt.Println(data.Starred_url)
+	getJson(config, userAddr, &data)
+	fmt.Println(data.Repos_url)
 }
 
 var myClient = &http.Client{Timeout: 10 * time.Second}
 
-func getJson(url string, target interface{}) error {
+func getJson(config Configuration, url string, target interface{}) error {
 	request, err := http.NewRequest("GET", url, nil)
 	if err != nil {
 		fmt.Println(err)
 	}
 	request.Header.Set("User-Agent", userAgent)
+	request.SetBasicAuth(config.Username, config.Password)
 
 	response, err := myClient.Do(request)
 	if err != nil {
