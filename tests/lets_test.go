@@ -28,7 +28,7 @@ func TestAPICall(t *testing.T) {
 		log.Fatalln(err)
 	}
 	data := Test{}
-	ghvisual.GetJson(config, rootAddr, &data)
+	ghvisual.GetJson(&config, rootAddr, &data)
 
 	expected := "https://api.github.com/user"
 	actual := data.Current_user_url
