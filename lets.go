@@ -5,17 +5,13 @@ import (
 	"fmt"
 	"log"
 	"os"
+	ghv "./ghvisual"
 )
 
-const configFile = "../ghvisual/config/config.json"
+const configFile = "./config/config.json"
 const userAgent = "Sean-Hassett_ghvisual"
 const startAddr = "https://api.github.com/user"
 const tempAddr = "https://api.github.com/users/Sean-Hassett/repos"
-
-type Configuration struct {
-	Username string
-	Token    string
-}
 
 type Repos struct {
 	Repos_url string
@@ -32,14 +28,13 @@ func main() {
 		log.Fatalln(err)
 	}
 	decoder := json.NewDecoder(file)
-	config := Configuration{}
+	config := ghv.Configuration{}
 	err = decoder.Decode(&config)
 	if err != nil {
 		log.Fatalln(err)
 	}
-	result := GetJson(&config, tempAddr)
 	var data []Links
-	json.Unmarshal(result, &data)
+	ghv.GetJson(&config, tempAddr, &data)
 
 	for _, name := range data {
 		fmt.Println(name.Name)

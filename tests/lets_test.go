@@ -12,7 +12,7 @@ type Test struct {
 	Current_user_url string
 }
 
-const configFile = "../ghvisual/config/config.json"
+const configFile = "../config/config.json"
 
 // Test the response from an API call
 func TestAPICall(t *testing.T) {
@@ -28,7 +28,7 @@ func TestAPICall(t *testing.T) {
 		log.Fatalln(err)
 	}
 	data := Test{}
-	ghvisual.GetJson(&config, rootAddr)
+	ghvisual.GetJson(&config, rootAddr, &data)
 
 	expected := "https://api.github.com/user"
 	actual := data.Current_user_url
