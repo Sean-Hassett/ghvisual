@@ -59,3 +59,26 @@ func TestGetReposURL(t *testing.T) {
 		t.Errorf("Test failed, expected: '%s', got: '%s'", expected, actual)
 	}
 }
+
+// Test getting a user's repo URL
+func TestGetReposList(t *testing.T) {
+	file, err := os.Open(configFile)
+	if err != nil {
+		log.Fatalln(err)
+	}
+	decoder := json.NewDecoder(file)
+	config := ghv.Configuration{}
+	err = decoder.Decode(&config)
+	if err != nil {
+		log.Fatalln(err)
+	}
+	reposAddr := "https://api.github.com/users/" + config.Username + "/repos"
+
+	expected := "CS1013-project10"
+	var data []ghv.Links
+	data = ghv.GetReposList(&config, reposAddr)
+	actual := data[0].Name
+	if actual != expected {
+		t.Errorf("Test failed, expected: '%s', got: '%s'", expected, actual)
+	}
+}
