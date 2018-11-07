@@ -1,24 +1,22 @@
 package main
 
 import (
+	ghv "./ghvisual"
 	"encoding/json"
 	"fmt"
 	"log"
 	"os"
-	ghv "./ghvisual"
 )
 
 const configFile = "./config/config.json"
-const userAgent = "Sean-Hassett_ghvisual"
 const startAddr = "https://api.github.com/user"
-const tempAddr = "https://api.github.com/users/Sean-Hassett/repos"
 
-type Repos struct {
-	Repos_url string
-}
 type Links struct {
 	Name string
+	Url  string
 }
+
+var config ghv.Configuration
 
 // Makes a HTTP GET request to the passed in URL. Parses JSON data from the body of the response
 // and writes matching entries to a passed in struct.
@@ -28,15 +26,15 @@ func main() {
 		log.Fatalln(err)
 	}
 	decoder := json.NewDecoder(file)
-	config := ghv.Configuration{}
 	err = decoder.Decode(&config)
 	if err != nil {
 		log.Fatalln(err)
 	}
+	linksAddr := ghv.GetReposURL(&config, startAddr)
 	var data []Links
-	ghv.GetJson(&config, tempAddr, &data)
+	ghv.GetJson(&config, linksAddr, &data)
 
 	for _, name := range data {
-		fmt.Println(name.Name)
+		fmt.Println(name.Url)
 	}
 }

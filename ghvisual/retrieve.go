@@ -8,11 +8,14 @@ import (
 	"time"
 )
 
-const userAgent = "Sean-Hassett_ghvisual"
+const userAgent = "Sean-Hassett-ghvisual"
 
 type Configuration struct {
 	Username string
 	Token    string
+}
+type Repos struct {
+	Repos_url string
 }
 
 // Makes a HTTP GET request to the passed in URL. Parses JSON data from the body of the response
@@ -38,4 +41,11 @@ func GetJson(config *Configuration, url string, target interface{}) error {
 		log.Fatalln(err)
 	}
 	return json.Unmarshal(ret, &target)
+}
+
+// Returns a list of repos that the user defined in config is owner of
+func GetReposURL(config *Configuration, addr string) string {
+	var data Repos
+	GetJson(config, addr, &data)
+	return data.Repos_url
 }
