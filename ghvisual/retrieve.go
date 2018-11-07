@@ -1,15 +1,23 @@
-package main
+package ghvisual
 
 import (
+	"encoding/json"
 	"io/ioutil"
 	"log"
 	"net/http"
 	"time"
 )
 
+const userAgent = "Sean-Hassett_ghvisual"
+
+type Configuration struct {
+	Username string
+	Token    string
+}
+
 // Makes a HTTP GET request to the passed in URL. Parses JSON data from the body of the response
 // and writes matching entries to a passed in struct.
-func GetJson(config *Configuration, url string) []byte {
+func GetJson(config *Configuration, url string, target interface{}) error {
 	var myClient = &http.Client{Timeout: 10 * time.Second}
 
 	request, err := http.NewRequest("GET", url, nil)
@@ -29,5 +37,5 @@ func GetJson(config *Configuration, url string) []byte {
 	if err != nil {
 		log.Fatalln(err)
 	}
-	return ret
+	return json.Unmarshal(ret, &target)
 }
