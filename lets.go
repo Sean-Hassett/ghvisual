@@ -1,40 +1,23 @@
 package main
 
 import (
-	ghv "./ghvisual"
-	"encoding/json"
-	"fmt"
 	"log"
-	"os"
+	"github.com/ajstarks/svgo"
+	"net/http"
 )
 
-const configFile = "./config/config.json"
-const startAddr = "https://api.github.com/user"
-
-type Links struct {
-	Name string
-	Url  string
+func main() {
+	http.Handle("/", http.HandlerFunc(circle))
+	err := http.ListenAndServe(":8000", nil)
+	if err != nil {
+		log.Fatal("ListenAndServe:", err)
+	}
 }
 
-var config ghv.Configuration
-
-// Makes a HTTP GET request to the passed in URL. Parses JSON data from the body of the response
-// and writes matching entries to a passed in struct.
-func main() {
-	file, err := os.Open(configFile)
-	if err != nil {
-		log.Fatalln(err)
-	}
-	decoder := json.NewDecoder(file)
-	err = decoder.Decode(&config)
-	if err != nil {
-		log.Fatalln(err)
-	}
-	linksAddr := ghv.GetReposURL(&config, startAddr)
-	var data []Links
-	ghv.GetJson(&config, linksAddr, &data)
-
-	for _, name := range data {
-		fmt.Println(name.Url)
-	}
+func circle(w http.ResponseWriter, req *http.Request) {
+	w.Header().Set("Content-Type", "image/svg+xml")
+	s := svg.New(w)
+	s.Start(500, 500)
+	s.Circle(250, 250, 125, "fill:red;stroke:black")
+	s.End()
 }
