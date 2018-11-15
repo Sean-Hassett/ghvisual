@@ -1,0 +1,19 @@
+{
+	"comment": "",
+	"ignore": "test example",
+	"package": [
+		{
+			"checksumSHA1": "QPifSf/PVjj8iwDLL1+Ua8NFxSw=",
+			"path": "github.com/ajstarks/svgo",
+			"revision": "6ce6a3bcf6cde6c5007887677ebd148ec30f42a4",
+			"revisionTime": "2018-10-06T00:33:13Z"
+		},
+		{
+			"checksumSHA1": "vYlrmqshve9++rIaWWoafwalRn4=",
+			"path": "github.com/google/go-github/github",
+			"revision": "e16f49dbde5ff669ad7027145d2d4d65d0e25bee",
+			"revisionTime": "2018-11-15T13:38:05Z"
+		}
+	],
+	"rootPath": "github.com/seanh/ghvisual"
+}
