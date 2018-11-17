@@ -2,8 +2,11 @@ package main
 
 import (
 	ghv "./ghvisual"
+	"context"
 	"encoding/json"
 	"fmt"
+	"github.com/google/go-github/github"
+	"golang.org/x/oauth2"
 	"log"
 	"os"
 )
@@ -30,11 +33,20 @@ func main() {
 	if err != nil {
 		log.Fatalln(err)
 	}
-	linksAddr := ghv.GetReposURL(&config, startAddr)
-	var data []Links
-	ghv.GetJson(&config, linksAddr, &data)
 
-	for _, name := range data {
-		fmt.Println(name.Url)
+	ctx := context.Background()
+	ts := oauth2.StaticTokenSource(
+		&oauth2.Token{AccessToken: config.Token},
+	)
+	tc := oauth2.NewClient(ctx, ts)
+	client := github.NewClient(tc)
+
+	// list all repositories for the authenticated user
+	repos, _, err := client.Repositories.List(ctx, "", nil)
+
+	for _, repo := range repos {
+		if !*repo.Private {
+			fmt.Println(*repo.Name)
+		}
 	}
 }
