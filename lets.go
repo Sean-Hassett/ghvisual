@@ -24,6 +24,7 @@ var config ghv.Configuration
 // Makes a HTTP GET request to the passed in URL. Parses JSON data from the body of the response
 // and writes matching entries to a passed in struct.
 func main() {
+	// open the configuration file
 	file, err := os.Open(configFile)
 	if err != nil {
 		log.Fatalln(err)
@@ -34,6 +35,7 @@ func main() {
 		log.Fatalln(err)
 	}
 
+	// create api client with oauth2 token
 	ctx := context.Background()
 	ts := oauth2.StaticTokenSource(
 		&oauth2.Token{AccessToken: config.Token},
@@ -46,7 +48,13 @@ func main() {
 
 	for _, repo := range repos {
 		if !*repo.Private {
-			fmt.Println(*repo.Name)
+			commits, _, err := client.Repositories.ListCommits(ctx, config.Username, *repo.Name, nil)
+			if err != nil {
+				fmt.Println(err)
+				}
+			for _, commit := range commits {
+				fmt.Println(*commit.Commit.Message)
+			}
 		}
 	}
 }
