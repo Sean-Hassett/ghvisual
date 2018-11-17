@@ -9,20 +9,23 @@ import (
 	"golang.org/x/oauth2"
 	"log"
 	"os"
+	"time"
 )
 
 const configFile = "./config/config.json"
-const startAddr = "https://api.github.com/user"
-
-type Links struct {
-	Name string
-	Url  string
-}
 
 var config ghv.Configuration
 
-// Makes a HTTP GET request to the passed in URL. Parses JSON data from the body of the response
-// and writes matching entries to a passed in struct.
+type Commit struct {
+	Author string
+	Date time.Time
+	Size int
+}
+type Repo struct {
+	Name string
+	Commits []Commit
+}
+
 func main() {
 	// open the configuration file
 	file, err := os.Open(configFile)
@@ -43,18 +46,34 @@ func main() {
 	tc := oauth2.NewClient(ctx, ts)
 	client := github.NewClient(tc)
 
+	commitsOpt := &github.CommitsListOptions{
+		ListOptions: github.ListOptions{Page: 1, PerPage: 100},
+	}
+
 	// list all repositories for the authenticated user
 	repos, _, err := client.Repositories.List(ctx, "", nil)
 
+	//repoList := []Repo{}
+
+	//i := 0
 	for _, repo := range repos {
-		if !*repo.Private {
-			commits, _, err := client.Repositories.ListCommits(ctx, config.Username, *repo.Name, nil)
+		//repoList = append(repoList, Repo{Name: *repo.Name, Commits: []Commit{}})
+		for {
+			commits, resp, err := client.Repositories.ListCommits(ctx, config.Username, *repo.Name, commitsOpt)
 			if err != nil {
 				fmt.Println(err)
-				}
-			for _, commit := range commits {
-				fmt.Println(*commit.Commit.Message)
 			}
+			for _, commit := range commits {
+				//repoList[i].Commits = append(repoList[i].Commits, Commit{Author: *commit.Commit.Author.Name, Date: *commit.Commit.Author.Date, Size: *commit.Author.DiskUsage})
+				fmt.Println(*commit.Commit.Message)
+				fmt.Println(commit.Commit.Author.Date)
+				//fmt.Println(commit.Author.DiskUsage)
+			}
+			if resp.NextPage == 0 {
+				break
+			}
+			commitsOpt.Page = resp.NextPage
+			//i += 1
 		}
 	}
 }
