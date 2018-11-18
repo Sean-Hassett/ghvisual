@@ -18,11 +18,12 @@ var config ghv.Configuration
 
 type Commit struct {
 	Author string
-	Date time.Time
-	Size int
+	Date   time.Time
+	Size   int
 }
 type Repo struct {
-	Name string
+	Name    string
+	Forked  bool
 	Commits []Commit
 }
 
@@ -53,27 +54,38 @@ func main() {
 	// list all repositories for the authenticated user
 	repos, _, err := client.Repositories.List(ctx, "", nil)
 
-	//repoList := []Repo{}
+	var repoList []Repo
 
-	//i := 0
+	i := 0
 	for _, repo := range repos {
-		//repoList = append(repoList, Repo{Name: *repo.Name, Commits: []Commit{}})
+		var commits []Commit
+		repoList = append(repoList, Repo{Name: *repo.Name, Forked: *repo.Fork, Commits: commits})
 		for {
 			commits, resp, err := client.Repositories.ListCommits(ctx, config.Username, *repo.Name, commitsOpt)
 			if err != nil {
 				fmt.Println(err)
 			}
 			for _, commit := range commits {
-				//repoList[i].Commits = append(repoList[i].Commits, Commit{Author: *commit.Commit.Author.Name, Date: *commit.Commit.Author.Date, Size: *commit.Author.DiskUsage})
-				fmt.Println(*commit.Commit.Message)
-				fmt.Println(commit.Commit.Author.Date)
-				//fmt.Println(commit.Author.DiskUsage)
+				if *commit.Commit.Author.Name == config.Username {
+					repoList[i].Commits = append(repoList[i].Commits, Commit{Author: *commit.Commit.Author.Name, Date: *commit.Commit.Author.Date, Size: 0})
+					if *repo.Name == "ghvisual" {
+						fmt.Println(*commit.Commit.Message)
+					}
+				}
 			}
 			if resp.NextPage == 0 {
 				break
 			}
 			commitsOpt.Page = resp.NextPage
-			//i += 1
+		}
+		i += 1
+	}
+	for _, repo := range repoList {
+		fmt.Println()
+		fmt.Println(repo.Name)
+		for _, commit := range repo.Commits {
+			fmt.Println(commit.Author)
+			fmt.Println(commit.Date)
 		}
 	}
 }
