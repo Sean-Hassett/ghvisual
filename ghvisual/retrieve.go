@@ -12,6 +12,7 @@ const userAgent = "Sean-Hassett-ghvisual"
 
 type Configuration struct {
 	Username string
+	Email    string
 	Token    string
 }
 type Repos struct {

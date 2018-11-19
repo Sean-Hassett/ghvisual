@@ -23,7 +23,8 @@ type Commit struct {
 }
 type Repo struct {
 	Name    string
-	Forked  bool
+	Owner   string
+	Size    int
 	Commits []Commit
 }
 
@@ -58,18 +59,20 @@ func main() {
 
 	i := 0
 	for _, repo := range repos {
-		var commits []Commit
-		repoList = append(repoList, Repo{Name: *repo.Name, Forked: *repo.Fork, Commits: commits})
+		if *repo.Fork {
+			repoList = append(repoList, Repo{Name: *repo.Name, Owner: *repo.Owner.Login, Size: *repo.Size, Commits: []Commit{}})
+		} else {
+			repoList = append(repoList, Repo{Name: *repo.Name, Owner: *repo.Owner.Login, Size: *repo.Size, Commits: []Commit{}})
+		}
 		for {
 			commits, resp, err := client.Repositories.ListCommits(ctx, config.Username, *repo.Name, commitsOpt)
 			if err != nil {
 				fmt.Println(err)
 			}
 			for _, commit := range commits {
-				if *commit.Commit.Author.Name == config.Username {
-					repoList[i].Commits = append(repoList[i].Commits, Commit{Author: *commit.Commit.Author.Name, Date: *commit.Commit.Author.Date, Size: 0})
-					if *repo.Name == "ghvisual" {
-						fmt.Println(*commit.Commit.Message)
+				if commit.Committer != nil {
+					if *commit.Commit.Author.Name == config.Email {
+						repoList[i].Commits = append(repoList[i].Commits, Commit{Author: *commit.Commit.Author.Name, Date: *commit.Commit.Author.Date, Size: 0})
 					}
 				}
 			}
@@ -83,6 +86,8 @@ func main() {
 	for _, repo := range repoList {
 		fmt.Println()
 		fmt.Println(repo.Name)
+		fmt.Println(repo.Owner)
+		fmt.Println(repo.Size)
 		for _, commit := range repo.Commits {
 			fmt.Println(commit.Author)
 			fmt.Println(commit.Date)
