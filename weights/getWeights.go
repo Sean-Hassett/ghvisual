@@ -1,0 +1,5 @@
+package weights
+
+func main() {
+
+}
