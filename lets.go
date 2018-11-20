@@ -22,10 +22,11 @@ type Commit struct {
 	Size   int
 }
 type Repo struct {
-	Name    string
-	Owner   string
-	Size    int
-	Commits []Commit
+	Name      string
+	Owner     string
+	Size      int
+	Languages map[string]int
+	Commits   []Commit
 }
 
 func main() {
@@ -59,10 +60,15 @@ func main() {
 
 	i := 0
 	for _, repo := range repos {
+		languages, _, err := client.Repositories.ListLanguages(ctx, config.Username, *repo.Name)
+		if err != nil {
+			fmt.Println(err)
+		}
+
 		if *repo.Fork {
-			repoList = append(repoList, Repo{Name: *repo.Name, Owner: *repo.Owner.Login, Size: *repo.Size, Commits: []Commit{}})
+			repoList = append(repoList, Repo{Name: *repo.Name, Owner: *repo.Owner.Login, Size: *repo.Size, Languages: languages, Commits: []Commit{}})
 		} else {
-			repoList = append(repoList, Repo{Name: *repo.Name, Owner: *repo.Owner.Login, Size: *repo.Size, Commits: []Commit{}})
+			repoList = append(repoList, Repo{Name: *repo.Name, Owner: *repo.Owner.Login, Size: *repo.Size, Languages: languages, Commits: []Commit{}})
 		}
 		for {
 			commits, resp, err := client.Repositories.ListCommits(ctx, config.Username, *repo.Name, commitsOpt)
@@ -88,6 +94,7 @@ func main() {
 		fmt.Println(repo.Name)
 		fmt.Println(repo.Owner)
 		fmt.Println(repo.Size)
+		fmt.Println(repo.Languages)
 		for _, commit := range repo.Commits {
 			fmt.Println(commit.Author)
 			fmt.Println(commit.Date)
