@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"github.com/ajstarks/svgo"
 	ghv "github.com/seanh/ghvisual/ghvisual"
 	"log"
@@ -10,11 +11,12 @@ import (
 
 const width = 1920
 const height = 1080
-const offset = 25
+const offset = 10
+const bgShade = 220
 
 func main() {
 	http.Handle("/", http.HandlerFunc(draw))
-	err := http.ListenAndServe(":8000", nil)
+	err := http.ListenAndServe(":8081", nil)
 	if err != nil {
 		log.Fatal("ListenAndServe:", err)
 	}
@@ -22,12 +24,14 @@ func main() {
 
 func draw(w http.ResponseWriter, req *http.Request) {
 	repoList := ghv.Retrieve()
-	i := 0
+	i := offset
 	canvas := svg.New(w)
 	canvas.Start(width, height)
+	canvas.Rect(0, 0, width, height, canvas.RGB(bgShade, bgShade, bgShade))
 	for _, repo := range repoList {
-		canvas.Circle(i + int(math.Log(float64(repo.Size)))*10 + offset, height/2, int(math.Log(float64(repo.Size)))*10, "fill:none;stroke:black")
-		i += int(math.Log(float64(repo.Size)))*10 + offset
+		canvas.Circle(i + int(math.Log(float64(repo.Size)))*10, height/2, int(math.Log(float64(repo.Size)))*10, "fill:none;stroke:black")
+		i += ((int(math.Log(float64(repo.Size)))*10) * 2) + offset
+		fmt.Println(i)
 	}
 	canvas.End()
 }
