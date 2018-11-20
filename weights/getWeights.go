@@ -1,5 +1,0 @@
-package weights
-
-func main() {
-
-}

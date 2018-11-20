@@ -1,0 +1,17 @@
+{
+  "Euler": ["https://github.com/nayuki/Project-Euler-solutions",
+    "https://github.com/dcrousso/ProjectEuler",
+    "https://github.com/lakshayg/project-euler",
+    "https://github.com/sw0x2A/project-euler-golang"
+  ],
+  "Leetcode": ["https://github.com/haoel/leetcode",
+    "https://github.com/illuz/leetcode/tree/master/solutions",
+    "https://github.com/gouthampradhan/leetcode",
+    "https://github.com/qiyuangong/leetcode",
+    "https://github.com/bonfy/leetcode",
+    "https://github.com/fishercoder1534/Leetcode",
+    "https://github.com/leetcoders/LeetCode"
+  ],
+  "Hackerrank": ["https://github.com/ehotinger/HackerRank"
+  ]
+}

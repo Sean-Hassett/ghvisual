@@ -1,0 +1,271 @@
+{
+  "sha": "f4da6066c936d06593c3ea297d7e81d019aa3be8",
+  "url": "https://api.github.com/repos/lakshayg/project-euler/git/trees/f4da6066c936d06593c3ea297d7e81d019aa3be8",
+  "tree": [
+    {
+      "path": "001.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "6294c1a0c40d46c29240993e1fcbed19d9c6a07a",
+      "size": 50,
+      "url": "https://api.github.com/repos/lakshayg/project-euler/git/blobs/6294c1a0c40d46c29240993e1fcbed19d9c6a07a"
+    },
+    {
+      "path": "002.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "e057a9422bfb6ce28a790ad72ef4c897bb0c1fb2",
+      "size": 191,
+      "url": "https://api.github.com/repos/lakshayg/project-euler/git/blobs/e057a9422bfb6ce28a790ad72ef4c897bb0c1fb2"
+    },
+    {
+      "path": "003.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "f74986d87a823e68c49664504adfe44b7f9a1f45",
+      "size": 57,
+      "url": "https://api.github.com/repos/lakshayg/project-euler/git/blobs/f74986d87a823e68c49664504adfe44b7f9a1f45"
+    },
+    {
+      "path": "004.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "cd43a5ba2f020097cade058c3eda5d6426024453",
+      "size": 216,
+      "url": "https://api.github.com/repos/lakshayg/project-euler/git/blobs/cd43a5ba2f020097cade058c3eda5d6426024453"
+    },
+    {
+      "path": "005.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "688690501375333916bb3d019326eca825a4cedd",
+      "size": 122,
+      "url": "https://api.github.com/repos/lakshayg/project-euler/git/blobs/688690501375333916bb3d019326eca825a4cedd"
+    },
+    {
+      "path": "006.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "c0e36d01fcc7783d5458d208fc39a354e620c00d",
+      "size": 50,
+      "url": "https://api.github.com/repos/lakshayg/project-euler/git/blobs/c0e36d01fcc7783d5458d208fc39a354e620c00d"
+    },
+    {
+      "path": "007.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "909039b2cc804bfb184abef09c2e5a3bf1e1f2f4",
+      "size": 134,
+      "url": "https://api.github.com/repos/lakshayg/project-euler/git/blobs/909039b2cc804bfb184abef09c2e5a3bf1e1f2f4"
+    },
+    {
+      "path": "010.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "5cf4e3b75a5895642660ad68532af42e13baa826",
+      "size": 117,
+      "url": "https://api.github.com/repos/lakshayg/project-euler/git/blobs/5cf4e3b75a5895642660ad68532af42e13baa826"
+    },
+    {
+      "path": "013.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "c51208d31f4cce8cc9a98748f3c5a58cdf4d7b75",
+      "size": 124,
+      "url": "https://api.github.com/repos/lakshayg/project-euler/git/blobs/c51208d31f4cce8cc9a98748f3c5a58cdf4d7b75"
+    },
+    {
+      "path": "015.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "3dfe863428082cd74a3fd79fe951751bf72a4a46",
+      "size": 305,
+      "url": "https://api.github.com/repos/lakshayg/project-euler/git/blobs/3dfe863428082cd74a3fd79fe951751bf72a4a46"
+    },
+    {
+      "path": "016.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "be988519b83819557bab85c2e475bbf245672d11",
+      "size": 73,
+      "url": "https://api.github.com/repos/lakshayg/project-euler/git/blobs/be988519b83819557bab85c2e475bbf245672d11"
+    },
+    {
+      "path": "020.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "8413253d7ff5c186dad9e5e13a21a66e76ce13cc",
+      "size": 107,
+      "url": "https://api.github.com/repos/lakshayg/project-euler/git/blobs/8413253d7ff5c186dad9e5e13a21a66e76ce13cc"
+    },
+    {
+      "path": "025.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "e23e283b3d5de88441949e2b84a3681eaa79512b",
+      "size": 152,
+      "url": "https://api.github.com/repos/lakshayg/project-euler/git/blobs/e23e283b3d5de88441949e2b84a3681eaa79512b"
+    },
+    {
+      "path": "029.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "9dbe59a4907c9d3815dbd98016caafc33d8d73a9",
+      "size": 113,
+      "url": "https://api.github.com/repos/lakshayg/project-euler/git/blobs/9dbe59a4907c9d3815dbd98016caafc33d8d73a9"
+    },
+    {
+      "path": "032.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "e86e453157cefef5544bf2899ef7a666399dae0b",
+      "size": 458,
+      "url": "https://api.github.com/repos/lakshayg/project-euler/git/blobs/e86e453157cefef5544bf2899ef7a666399dae0b"
+    },
+    {
+      "path": "034.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "570e8418e519b09dc553b4311671db667d3b3182",
+      "size": 287,
+      "url": "https://api.github.com/repos/lakshayg/project-euler/git/blobs/570e8418e519b09dc553b4311671db667d3b3182"
+    },
+    {
+      "path": "036.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "1f4c80e831a5327329ef907d9523008c66143962",
+      "size": 232,
+      "url": "https://api.github.com/repos/lakshayg/project-euler/git/blobs/1f4c80e831a5327329ef907d9523008c66143962"
+    },
+    {
+      "path": "039.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "0a804b4445bf0612edec4da397b6c3c5c8ea368c",
+      "size": 423,
+      "url": "https://api.github.com/repos/lakshayg/project-euler/git/blobs/0a804b4445bf0612edec4da397b6c3c5c8ea368c"
+    },
+    {
+      "path": "040.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "9838f86a44469cd450f86ed7f4315432d09836ad",
+      "size": 120,
+      "url": "https://api.github.com/repos/lakshayg/project-euler/git/blobs/9838f86a44469cd450f86ed7f4315432d09836ad"
+    },
+    {
+      "path": "043.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "146cf7ec8f45d69921e0882b784a7a6ed29dccf3",
+      "size": 592,
+      "url": "https://api.github.com/repos/lakshayg/project-euler/git/blobs/146cf7ec8f45d69921e0882b784a7a6ed29dccf3"
+    },
+    {
+      "path": "048.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "0d9f6de8686549e3c0c0bcf6e1ffb8e4ae4065ee",
+      "size": 72,
+      "url": "https://api.github.com/repos/lakshayg/project-euler/git/blobs/0d9f6de8686549e3c0c0bcf6e1ffb8e4ae4065ee"
+    },
+    {
+      "path": "052.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "6f086b0c28debebf38234fd9e2928ebc81063a15",
+      "size": 193,
+      "url": "https://api.github.com/repos/lakshayg/project-euler/git/blobs/6f086b0c28debebf38234fd9e2928ebc81063a15"
+    },
+    {
+      "path": "053.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "e4d58e7760d9d4764088b2f94c04ea154141ccd9",
+      "size": 274,
+      "url": "https://api.github.com/repos/lakshayg/project-euler/git/blobs/e4d58e7760d9d4764088b2f94c04ea154141ccd9"
+    },
+    {
+      "path": "056.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "67f0226c6a8a4106eaf151e22975c734bcfca28d",
+      "size": 199,
+      "url": "https://api.github.com/repos/lakshayg/project-euler/git/blobs/67f0226c6a8a4106eaf151e22975c734bcfca28d"
+    },
+    {
+      "path": "058.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "1a4a1fb439768f0faa6942d826e496aec01b2665",
+      "size": 646,
+      "url": "https://api.github.com/repos/lakshayg/project-euler/git/blobs/1a4a1fb439768f0faa6942d826e496aec01b2665"
+    },
+    {
+      "path": "062.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "90c69af6a4a2f3f170fd58137b4b08dfe0803c17",
+      "size": 687,
+      "url": "https://api.github.com/repos/lakshayg/project-euler/git/blobs/90c69af6a4a2f3f170fd58137b4b08dfe0803c17"
+    },
+    {
+      "path": "089.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "81d05812c7ff4e30c52f471664b9bf0bc663f76a",
+      "size": 1457,
+      "url": "https://api.github.com/repos/lakshayg/project-euler/git/blobs/81d05812c7ff4e30c52f471664b9bf0bc663f76a"
+    },
+    {
+      "path": "091.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "124c2daa3b3793ac7b57e5ce97a09a4b03a09a98",
+      "size": 320,
+      "url": "https://api.github.com/repos/lakshayg/project-euler/git/blobs/124c2daa3b3793ac7b57e5ce97a09a4b03a09a98"
+    },
+    {
+      "path": "097.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "7738dcb6acdac5684cb76c24ca22f4728f6c3d0f",
+      "size": 55,
+      "url": "https://api.github.com/repos/lakshayg/project-euler/git/blobs/7738dcb6acdac5684cb76c24ca22f4728f6c3d0f"
+    },
+    {
+      "path": "119.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "0c6cde293730bad6c2841da172d0ac93c2b3131c",
+      "size": 780,
+      "url": "https://api.github.com/repos/lakshayg/project-euler/git/blobs/0c6cde293730bad6c2841da172d0ac93c2b3131c"
+    },
+    {
+      "path": "206.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "076d9e171b09613b014e9c40bbb23c1badfd1869",
+      "size": 123,
+      "url": "https://api.github.com/repos/lakshayg/project-euler/git/blobs/076d9e171b09613b014e9c40bbb23c1badfd1869"
+    },
+    {
+      "path": "euler.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "849aa29790789215bf0311ddbdfc636de6619003",
+      "size": 3167,
+      "url": "https://api.github.com/repos/lakshayg/project-euler/git/blobs/849aa29790789215bf0311ddbdfc636de6619003"
+    },
+    {
+      "path": "euler_data.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "d7e739cd0e23b8c81c99fc97eb357e97b697ff72",
+      "size": 13582,
+      "url": "https://api.github.com/repos/lakshayg/project-euler/git/blobs/d7e739cd0e23b8c81c99fc97eb357e97b697ff72"
+    }
+  ],
+  "truncated": false
+}

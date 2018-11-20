@@ -1,0 +1,129 @@
+{
+  "sha": "a31aad1cb52a50a45b4bae3ff6fc61ce38e062b4",
+  "url": "https://api.github.com/repos/lakshayg/project-euler/git/trees/a31aad1cb52a50a45b4bae3ff6fc61ce38e062b4",
+  "tree": [
+    {
+      "path": ".gitattributes",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "412eeda78dc9de1186c2e0e1526764af82ab3431",
+      "size": 483,
+      "url": "https://api.github.com/repos/lakshayg/project-euler/git/blobs/412eeda78dc9de1186c2e0e1526764af82ab3431"
+    },
+    {
+      "path": ".gitignore",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "52ddab10b2d06c3fb4b625b72d2aae34e14666e3",
+      "size": 692,
+      "url": "https://api.github.com/repos/lakshayg/project-euler/git/blobs/52ddab10b2d06c3fb4b625b72d2aae34e14666e3"
+    },
+    {
+      "path": "Assembly",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "33e8b9083e3f3913f205b90b46046b80eb271ad4",
+      "url": "https://api.github.com/repos/lakshayg/project-euler/git/trees/33e8b9083e3f3913f205b90b46046b80eb271ad4"
+    },
+    {
+      "path": "C",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "a354bb60510aa8e8452309016e1f827be89c0f9a",
+      "url": "https://api.github.com/repos/lakshayg/project-euler/git/trees/a354bb60510aa8e8452309016e1f827be89c0f9a"
+    },
+    {
+      "path": "Go",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "9d1d212134b02b772e12af98ea827d45a9bec956",
+      "url": "https://api.github.com/repos/lakshayg/project-euler/git/trees/9d1d212134b02b772e12af98ea827d45a9bec956"
+    },
+    {
+      "path": "README.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "68a06260699eab6858a357dcc25c905937769560",
+      "size": 109,
+      "url": "https://api.github.com/repos/lakshayg/project-euler/git/blobs/68a06260699eab6858a357dcc25c905937769560"
+    },
+    {
+      "path": "dlang",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "6b7e912558c21372ac9ae59d628680b4dfec35e6",
+      "url": "https://api.github.com/repos/lakshayg/project-euler/git/trees/6b7e912558c21372ac9ae59d628680b4dfec35e6"
+    },
+    {
+      "path": "fortran",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "b7701e4587dca6d03716d9b10252f7aa7f9d6997",
+      "url": "https://api.github.com/repos/lakshayg/project-euler/git/trees/b7701e4587dca6d03716d9b10252f7aa7f9d6997"
+    },
+    {
+      "path": "haskell",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "03dd91e350c774839b0ada503d74fbf1bca5a06f",
+      "url": "https://api.github.com/repos/lakshayg/project-euler/git/trees/03dd91e350c774839b0ada503d74fbf1bca5a06f"
+    },
+    {
+      "path": "java",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "3ba541f958605c12b1d749a7916b7f8e536568fd",
+      "url": "https://api.github.com/repos/lakshayg/project-euler/git/trees/3ba541f958605c12b1d749a7916b7f8e536568fd"
+    },
+    {
+      "path": "julia",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "efe986a9a78a69adcde7e20c287e56a92ac401cd",
+      "url": "https://api.github.com/repos/lakshayg/project-euler/git/trees/efe986a9a78a69adcde7e20c287e56a92ac401cd"
+    },
+    {
+      "path": "lisp",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "a8d42bc2d09774b3e94047a5cae62c899c04147b",
+      "url": "https://api.github.com/repos/lakshayg/project-euler/git/trees/a8d42bc2d09774b3e94047a5cae62c899c04147b"
+    },
+    {
+      "path": "lua",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "5014f16c5ce2797a1bb0e13074061dd0e3718774",
+      "url": "https://api.github.com/repos/lakshayg/project-euler/git/trees/5014f16c5ce2797a1bb0e13074061dd0e3718774"
+    },
+    {
+      "path": "matlab",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "a8b24dbdfea28dd40c998e94e155a78cdc14f64b",
+      "url": "https://api.github.com/repos/lakshayg/project-euler/git/trees/a8b24dbdfea28dd40c998e94e155a78cdc14f64b"
+    },
+    {
+      "path": "python",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "f4da6066c936d06593c3ea297d7e81d019aa3be8",
+      "url": "https://api.github.com/repos/lakshayg/project-euler/git/trees/f4da6066c936d06593c3ea297d7e81d019aa3be8"
+    },
+    {
+      "path": "rust",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "c76e0c891a0757b534e4e0516f00f484364d81bf",
+      "url": "https://api.github.com/repos/lakshayg/project-euler/git/trees/c76e0c891a0757b534e4e0516f00f484364d81bf"
+    },
+    {
+      "path": "scala",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "5a9d00770992eea68cd429d517d95a898d154ac6",
+      "url": "https://api.github.com/repos/lakshayg/project-euler/git/trees/5a9d00770992eea68cd429d517d95a898d154ac6"
+    }
+  ],
+  "truncated": false
+}
