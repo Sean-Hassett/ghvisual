@@ -2,23 +2,32 @@ package main
 
 import (
 	"github.com/ajstarks/svgo"
+	ghv "github.com/seanh/ghvisual/ghvisual"
 	"log"
+	"math"
 	"net/http"
 )
 
+const width = 1920
+const height = 1080
+const offset = 25
+
 func main() {
-	http.Handle("/", http.HandlerFunc(circ))
+	http.Handle("/", http.HandlerFunc(draw))
 	err := http.ListenAndServe(":8000", nil)
 	if err != nil {
 		log.Fatal("ListenAndServe:", err)
 	}
 }
 
-func circ(w http.ResponseWriter, req *http.Request) {
-	w.Header().Set("Content-Type", "image/svg+xml")
-	s := svg.New(w)
-	s.Start(500, 500)
-	s.Circle(250, 250, 125, "fill:none;stroke:black")
-	s.Text(500/2, 500/2, "Hello, SVG", "text-anchor:middle;font-size:30px;fill:black")
-	s.End()
+func draw(w http.ResponseWriter, req *http.Request) {
+	repoList := ghv.Retrieve()
+	i := 0
+	canvas := svg.New(w)
+	canvas.Start(width, height)
+	for _, repo := range repoList {
+		canvas.Circle(i + int(math.Log(float64(repo.Size)))*10 + offset, height/2, int(math.Log(float64(repo.Size)))*10, "fill:none;stroke:black")
+		i += int(math.Log(float64(repo.Size)))*10 + offset
+	}
+	canvas.End()
 }

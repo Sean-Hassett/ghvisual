@@ -1,63 +1,97 @@
 package ghvisual
 
 import (
-	"encoding/json"
-	"io/ioutil"
-	"log"
-	"net/http"
-	"time"
+"context"
+"encoding/json"
+"fmt"
+"github.com/google/go-github/github"
+"golang.org/x/oauth2"
+"log"
+"os"
+"time"
 )
 
-const userAgent = "Sean-Hassett-ghvisual"
+const configFile = "./config/config.json"
+
+var config Configuration
 
 type Configuration struct {
 	Username string
+	Email    string
 	Token    string
 }
-type Repos struct {
-	Repos_url string
+type Commit struct {
+	Author string
+	Date   time.Time
+	Size   int
 }
-type Links struct {
-	Name string
-	Url  string
+type Repo struct {
+	Name      string
+	Owner     string
+	Size      int
+	Languages map[string]int
+	//Commits   []Commit
 }
 
-// Makes a HTTP GET request to the passed in URL. Parses JSON data from the body of the response
-// and writes matching entries to a passed in struct.
-func GetJson(config *Configuration, url string, target interface{}) error {
-	var myClient = &http.Client{Timeout: 10 * time.Second}
-
-	request, err := http.NewRequest("GET", url, nil)
+func Retrieve() []Repo {
+	// open the configuration file
+	file, err := os.Open(configFile)
 	if err != nil {
 		log.Fatalln(err)
 	}
-	request.Header.Set("User-Agent", userAgent)
-	request.SetBasicAuth(config.Username, config.Token)
-
-	response, err := myClient.Do(request)
+	decoder := json.NewDecoder(file)
+	err = decoder.Decode(&config)
 	if err != nil {
 		log.Fatalln(err)
 	}
-	defer response.Body.Close()
 
-	ret, err := ioutil.ReadAll(response.Body)
-	if err != nil {
-		log.Fatalln(err)
+	// create api client with oauth2 token
+	ctx := context.Background()
+	ts := oauth2.StaticTokenSource(
+		&oauth2.Token{AccessToken: config.Token},
+	)
+	tc := oauth2.NewClient(ctx, ts)
+	client := github.NewClient(tc)
+
+	commitsOpt := &github.CommitsListOptions{
+		ListOptions: github.ListOptions{Page: 1, PerPage: 100},
 	}
-	return json.Unmarshal(ret, &target)
-}
 
-// Returns the API address for the repos of the user defined in config
-func GetReposURL(config *Configuration, userAddr string) string {
-	var data Repos
-	GetJson(config, userAddr, &data)
-	return data.Repos_url
-}
+	// list all repositories for the authenticated user
+	repos, _, err := client.Repositories.List(ctx, "", nil)
 
-// Returns a list of repos that the user defined in config is owner of, both the name of the repo
-// and its API address
-func GetReposList(config *Configuration, reposAddr string) []Links {
-	var data []Links
-	GetJson(config, reposAddr, &data)
-	return data
+	var repoList []Repo
+
+	i := 0
+	for _, repo := range repos {
+		languages, _, err := client.Repositories.ListLanguages(ctx, config.Username, *repo.Name)
+		if err != nil {
+			fmt.Println(err)
+		}
+
+		if *repo.Fork {
+			repoList = append(repoList, Repo{Name: *repo.Name, Owner: *repo.Owner.Login, Size: *repo.Size, Languages: languages})
+		} else {
+			repoList = append(repoList, Repo{Name: *repo.Name, Owner: *repo.Owner.Login, Size: *repo.Size, Languages: languages})
+		}
+		for {
+			commits, resp, err := client.Repositories.ListCommits(ctx, config.Username, *repo.Name, commitsOpt)
+			if err != nil {
+				fmt.Println(err)
+			}
+			for _, commit := range commits {
+				if commit.Committer != nil {
+					if *commit.Commit.Author.Name == config.Email {
+						//repoList[i].Commits = append(repoList[i].Commits, Commit{Author: *commit.Commit.Author.Name, Date: *commit.Commit.Author.Date, Size: 0})
+					}
+				}
+			}
+			if resp.NextPage == 0 {
+				break
+			}
+			commitsOpt.Page = resp.NextPage
+		}
+		i += 1
+	}
+	return repoList
 }
