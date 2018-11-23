@@ -11,19 +11,23 @@
 
 ##### Steps
 
-* Clone the repo
+* Clone the repo.
 * Open the file:
 ```
 ghvisual/config/config.json
 ```
-* Change the placeholder values to your own details
-* Run the following commands:
+* Change the placeholder values to your own details.
+* To build the Docker image run:
 
 ```
-docker build -t ghvisual .
-docker run -p 8080:8080 ghvisual
+bash build.sh
 ```
-* Navigate to localhost:8080 in your browser to see the program
+* To run the image in a container run:
+```
+bash run.sh
+``` 
+* Docker may require sudo privileges when running both of these scripts.
+* With the container running, navigate to localhost:8080 in your browser to see the program.
 
 #### 2. No Docker
 
@@ -35,19 +39,18 @@ docker run -p 8080:8080 ghvisual
 
 ##### Steps
 
-* Clone the repo and make sure the cloned repo is in your GOPATH
+* Clone the repo and make sure the cloned repo is in your GOPATH.
 * From the root directory run:
 ```
 govendor sync
 ```
-* This will install the dependencies
-* Run the following commands:
+* This will install the dependencies.
+* Run the following commands from the root directory:
 ```
-cd ghvisual
-go build -o main . && cd ..
+cd ghvisual && go build -o main . && cd ..
 ```
 * To run the program, from the root directory run:
 ```
 ./ghvisual/main
 ```
-* Navigate to localhost:8080 in your browser to see the program
+* Navigate to localhost:8080 in your browser to see the program.
