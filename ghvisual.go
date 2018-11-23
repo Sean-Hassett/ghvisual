@@ -1,9 +1,9 @@
-package main
+package ghvisual
 
 import (
 	"fmt"
+	ghv "ghvisual/retrieve"
 	"github.com/ajstarks/svgo"
-	ghv "github.com/seanh/ghvisual/ghvisual"
 	"log"
 	"math"
 	"net/http"
@@ -29,8 +29,9 @@ func draw(w http.ResponseWriter, req *http.Request) {
 	canvas.Start(width, height)
 	canvas.Rect(0, 0, width, height, canvas.RGB(bgShade, bgShade, bgShade))
 	for _, repo := range repoList {
-		canvas.Circle(i + int(math.Log(float64(repo.Size)))*10, height/2, int(math.Log(float64(repo.Size)))*10, "fill:none;stroke:black")
-		i += ((int(math.Log(float64(repo.Size)))*10) * 2) + offset
+		s := "fill:green;stroke:none"
+		canvas.Circle(i+int(math.Log(float64(repo.Size)))*10, height/2, int(math.Log(float64(repo.Size)))*10, s)
+		i += ((int(math.Log(float64(repo.Size))) * 10) * 2) + offset
 		fmt.Println(i)
 	}
 	canvas.End()

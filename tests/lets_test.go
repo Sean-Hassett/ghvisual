@@ -1,7 +1,7 @@
 package tests
 
 import (
-	ghv "../ghvisual"
+	ghv "../retrieve"
 	"encoding/json"
 	"log"
 	"os"

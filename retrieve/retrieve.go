@@ -1,4 +1,4 @@
-package ghvisual
+package retrieve
 
 import (
 "context"
