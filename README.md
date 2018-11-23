@@ -40,6 +40,11 @@ bash run.sh
 ##### Steps
 
 * Clone the repo and make sure the cloned repo is in your GOPATH.
+* Open the file:
+```
+ghvisual/config/config.json
+```
+* Change the placeholder values to your own details.
 * From the root directory run:
 ```
 govendor sync
@@ -49,7 +54,11 @@ govendor sync
 ```
 cd ghvisual && go build -o main . && cd ..
 ```
-* To run the program, from the root directory run:
+* Add execution permissions to the binary with:
+```
+chmod +x ghvisual/main
+```
+* Run the program:
 ```
 ./ghvisual/main
 ```
