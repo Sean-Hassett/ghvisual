@@ -1,8 +1,7 @@
-package ghvisual
+package main
 
 import (
 	"fmt"
-	ghv "ghvisual/retrieve"
 	"github.com/ajstarks/svgo"
 	"log"
 	"math"
@@ -23,7 +22,7 @@ func main() {
 }
 
 func draw(w http.ResponseWriter, req *http.Request) {
-	repoList := ghv.Retrieve()
+	repoList := Retrieve()
 	i := offset
 	canvas := svg.New(w)
 	canvas.Start(width, height)

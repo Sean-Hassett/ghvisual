@@ -1,4 +1,4 @@
-package retrieve
+package main
 
 import (
 "context"
@@ -11,7 +11,7 @@ import (
 "time"
 )
 
-const configFile = "./config/config.json"
+const configFile = "ghvisual/config/config.json"
 
 var config Configuration
 
