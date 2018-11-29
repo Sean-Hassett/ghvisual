@@ -6,6 +6,7 @@ import (
 	"log"
 	"math"
 	"net/http"
+	"time"
 )
 
 const width = 1920
@@ -28,10 +29,12 @@ func draw(w http.ResponseWriter, req *http.Request) {
 	canvas.Start(width, height)
 	canvas.Rect(0, 0, width, height, canvas.RGB(bgShade, bgShade, bgShade))
 	for _, repo := range repoList {
+		daysSinceUpdate := int(((time.Now().Sub(repo.Updated.Time)).Hours()) / 24)
+		fmt.Println(daysSinceUpdate)
+
 		s := "fill:green;stroke:none"
 		canvas.Circle(i+int(math.Log(float64(repo.Size)))*10, height/2, int(math.Log(float64(repo.Size)))*10, s)
 		i += ((int(math.Log(float64(repo.Size))) * 10) * 2) + offset
-		fmt.Println(i)
 	}
 	canvas.End()
 }

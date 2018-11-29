@@ -1,14 +1,14 @@
 package main
 
 import (
-"context"
-"encoding/json"
-"fmt"
-"github.com/google/go-github/github"
-"golang.org/x/oauth2"
-"log"
-"os"
-"time"
+	"context"
+	"encoding/json"
+	"fmt"
+	"github.com/google/go-github/github"
+	"golang.org/x/oauth2"
+	"log"
+	"os"
+	"time"
 )
 
 const configFile = "ghvisual/config/config.json"
@@ -29,6 +29,7 @@ type Repo struct {
 	Name      string
 	Owner     string
 	Size      int
+	Updated   github.Timestamp
 	Languages map[string]int
 	//Commits   []Commit
 }
@@ -70,9 +71,17 @@ func Retrieve() []Repo {
 		}
 
 		if *repo.Fork {
-			repoList = append(repoList, Repo{Name: *repo.Name, Owner: *repo.Owner.Login, Size: *repo.Size, Languages: languages})
+			repoList = append(repoList, Repo{Name: *repo.Name,
+				Owner:     *repo.Owner.Login,
+				Size:      *repo.Size,
+				Updated:   *repo.UpdatedAt,
+				Languages: languages})
 		} else {
-			repoList = append(repoList, Repo{Name: *repo.Name, Owner: *repo.Owner.Login, Size: *repo.Size, Languages: languages})
+			repoList = append(repoList, Repo{Name: *repo.Name,
+				Owner:     *repo.Owner.Login,
+				Size:      *repo.Size,
+				Updated:   *repo.UpdatedAt,
+				Languages: languages})
 		}
 		for {
 			commits, resp, err := client.Repositories.ListCommits(ctx, config.Username, *repo.Name, commitsOpt)
