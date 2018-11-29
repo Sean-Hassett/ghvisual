@@ -1,3 +1,5 @@
 #!bin/bash
 
-docker run -p 8080:8080 ghvisual
+cd ghvisual && go build -o main . && cd ..
+chmod +x ./ghvisual/main
+./ghvisual/main

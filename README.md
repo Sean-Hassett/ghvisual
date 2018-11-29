@@ -17,16 +17,12 @@
 ghvisual/config/config.json
 ```
 * Change the placeholder values to your own details.
-* To build the Docker image run:
+* To build and run the Docker image enter the following commands with sudo privileges:
 
 ```
-bash build.sh
-```
-* To run the image in a container run:
-```
-bash run.sh
+bash docker_build.sh
+bash docker_run.sh
 ``` 
-* Docker may require sudo privileges when running both of these scripts.
 * With the container running, navigate to localhost:8080 in your browser to see the program.
 
 #### 2. No Docker
@@ -49,17 +45,13 @@ ghvisual/config/config.json
 ```
 govendor sync
 ```
-* This will install the dependencies.
-* Run the following commands from the root directory:
+* This will install the dependencies. You will have to ensure your GOPATH and PATH environment variables are set up correctly. If govendor isn't working for you, enter the following commands before trying govendor again:
 ```
-cd ghvisual && go build -o main . && cd ..
+export GOPATH=$HOME/go
+export PATH=$PATH:$GOPATH/bin
 ```
-* Add execution permissions to the binary with:
+* Execute the run script from the root directory:
 ```
-chmod +x ghvisual/main
-```
-* Run the program:
-```
-./ghvisual/main
+bash run.sh
 ```
 * Navigate to localhost:8080 in your browser to see the program.
