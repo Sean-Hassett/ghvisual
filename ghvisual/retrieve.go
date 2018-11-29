@@ -31,7 +31,7 @@ type Repo struct {
 	Size      int
 	Updated   github.Timestamp
 	Languages map[string]int
-	//Commits   []Commit
+	Commits   []Commit
 }
 
 func Retrieve() []Repo {
@@ -65,42 +65,35 @@ func Retrieve() []Repo {
 
 	i := 0
 	for _, repo := range repos {
-		languages, _, err := client.Repositories.ListLanguages(ctx, config.Username, *repo.Name)
-		if err != nil {
-			fmt.Println(err)
-		}
-
-		if *repo.Fork {
-			repoList = append(repoList, Repo{Name: *repo.Name,
-				Owner:     *repo.Owner.Login,
-				Size:      *repo.Size,
-				Updated:   *repo.UpdatedAt,
-				Languages: languages})
-		} else {
-			repoList = append(repoList, Repo{Name: *repo.Name,
-				Owner:     *repo.Owner.Login,
-				Size:      *repo.Size,
-				Updated:   *repo.UpdatedAt,
-				Languages: languages})
-		}
-		for {
-			commits, resp, err := client.Repositories.ListCommits(ctx, config.Username, *repo.Name, commitsOpt)
+		if !*repo.Fork {
+			languages, _, err := client.Repositories.ListLanguages(ctx, config.Username, *repo.Name)
 			if err != nil {
 				fmt.Println(err)
 			}
-			for _, commit := range commits {
-				if commit.Committer != nil {
-					if *commit.Commit.Author.Name == config.Email {
-						//repoList[i].Commits = append(repoList[i].Commits, Commit{Author: *commit.Commit.Author.Name, Date: *commit.Commit.Author.Date, Size: 0})
+
+			repoList = append(repoList, Repo{Name: *repo.Name,
+				Owner:     *repo.Owner.Login,
+				Size:      *repo.Size,
+				Updated:   *repo.UpdatedAt,
+				Languages: languages})
+
+			for {
+				commits, resp, err := client.Repositories.ListCommits(ctx, config.Username, *repo.Name, commitsOpt)
+				if err != nil {
+					fmt.Println(err)
+				}
+				for _, commit := range commits {
+					if commit.Committer != nil {
+						repoList[i].Commits = append(repoList[i].Commits, Commit{Author: *commit.Commit.Author.Name, Date: *commit.Commit.Author.Date, Size: 0})
 					}
 				}
+				if resp.NextPage == 0 {
+					break
+				}
+				commitsOpt.Page = resp.NextPage
 			}
-			if resp.NextPage == 0 {
-				break
-			}
-			commitsOpt.Page = resp.NextPage
+			i += 1
 		}
-		i += 1
 	}
 	return repoList
 }
