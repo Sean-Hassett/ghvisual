@@ -29,6 +29,7 @@ type Repo struct {
 	Owner     string
 	Size      int
 	Updated   github.Timestamp
+	Language  string
 	Commits   []Commit
 }
 
@@ -67,12 +68,16 @@ func Retrieve() []Repo {
 			if err != nil {
 				fmt.Println(err)
 			}
+			l := "None"
+			if repo.Language != nil {
+				l = *repo.Language
+			}
 
 			repoList = append(repoList, Repo{Name: *repo.Name,
 				Owner:     *repo.Owner.Login,
 				Size:      *repo.Size,
-				Updated:   *repo.UpdatedAt})
-
+				Updated:   *repo.UpdatedAt,
+			    Language:  l})
 			for {
 				commits, resp, err := client.Repositories.ListCommits(ctx, config.Username, *repo.Name, commitsOpt)
 				if err != nil {

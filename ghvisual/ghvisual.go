@@ -18,7 +18,7 @@ const degreeToRadian = 0.0174533
 
 func main() {
 	http.Handle("/", http.HandlerFunc(draw))
-	err := http.ListenAndServe(":8082", nil)
+	err := http.ListenAndServe(":8081", nil)
 	if err != nil {
 		log.Fatal("ListenAndServe:", err)
 	}
@@ -133,15 +133,19 @@ func draw(w http.ResponseWriter, req *http.Request) {
 				activeHours[Evening] += 1
 			}
 		}
-		diameter := math.Log(float64(repo.Size))*10*2
+		diameter := math.Log(float64(repo.Size)) * 10 * 2
 		diameters = append(diameters, diameter)
 		sumOfDiameters += int(diameter + buffer)
 	}
 
 	normalisedDays := normaliseRange(daysSinceUpdate, 30, 90)
 	radius = float64(sumOfDiameters) / (2.0 * math.Pi)
+	if radius < 300 {
+		radius = 300.0
+	}
 	theta := -(buffer / float64(sumOfDiameters) * degrees)
 	minX := width
+	maxX := 0
 
 	for i, repo := range repoList {
 		brightnessMult := float64(normalisedDays[i]) / 60.0
@@ -152,11 +156,14 @@ func draw(w http.ResponseWriter, req *http.Request) {
 		theta += offset/2 + (diameters[i] / 2 / float64(sumOfDiameters) * degrees)
 		angle := theta * degreeToRadian
 
-		xVal := int(radius*math.Cos(angle)+width/2)
-		if xVal - int(diameters[i] / 2) < minX {
-			minX = xVal- int(diameters[i] / 2)
+		xVal := int(radius*math.Cos(angle) + width/2)
+		if xVal-int(diameters[i]/2) < minX {
+			minX = xVal - int(diameters[i]/2)
 		}
-		yVal := int(radius*math.Sin(angle)+height/2)
+		if xVal+int(diameters[i]/2) > maxX {
+			maxX = xVal + int(diameters[i]/2)
+		}
+		yVal := int(radius*math.Sin(angle) + height/2)
 		canvas.Line(xVal, yVal, width/2, height/2, "stroke:black")
 		canvas.Circle(xVal, yVal, int((math.Log(float64(repo.Size)))*10), s)
 		canvas.Text(xVal, yVal+4, strconv.Itoa(i+1), "fill:rgb(220,220,220);text-anchor:middle")
@@ -172,42 +179,75 @@ func draw(w http.ResponseWriter, req *http.Request) {
 	chartXStart := chartBuffer
 	chartYStart := chartBuffer
 	chartWidth := minX - chartBuffer*2
-	chartHeight := height/2 - (chartBuffer*3/2)
+	chartHeight := height/2 - (chartBuffer * 3 / 2)
 	space := 10
 
-	dayBarWidth := (chartWidth-space) / 7 - space
-	canvas.Rect(chartXStart, chartYStart, chartWidth, chartHeight, "fill:rgb(140,140,140)")
-	canvas.Text(chartXStart + chartWidth/2, chartYStart+20, "Daily Commits", "fill:rgb(220,220,220);text-anchor:middle;font-size:18")
+	chartBackgroundStyle := "fill:rgb(140,140,140)"
+	chartTextStyle := "fill:rgb(220,220,220);text-anchor:middle;font-size:18"
+	barStyle := "fill:rgb(51,78,78)"
+	barTextStyle := "text-anchor:middle;fill:rgb(220,220,220)"
+
+	dayBarWidth := (chartWidth-space)/7 - space
+	canvas.Rect(chartXStart, chartYStart, chartWidth, chartHeight, chartBackgroundStyle)
+	canvas.Text(chartXStart+chartWidth/2, chartYStart+20, "Commits per Day of Week", chartTextStyle)
 	var activeDaysValues []int
-	for _, day := range activeDays{
+	for _, day := range activeDays {
 		activeDaysValues = append(activeDaysValues, day)
 	}
 	normalActiveDaysValues := normaliseRange(activeDaysValues, 100, chartHeight-chartBuffer)
 	for i := range normalActiveDaysValues {
 		numCommits := strconv.Itoa(activeDaysValues[i])
 		day := days[i]
-		canvas.Rect(chartXStart+space+(dayBarWidth + space)*i, chartYStart+chartHeight-normalActiveDaysValues[i], dayBarWidth, normalActiveDaysValues[i], "fill:rgb(51,78,78")
-		canvas.Text(chartXStart+space+(dayBarWidth + space)*i + dayBarWidth/2, chartYStart+chartHeight-normalActiveDaysValues[i] + normalActiveDaysValues[i]-10, day, "text-anchor:middle;fill:rgb(220,220,220)")
-		canvas.Text(chartXStart+space+(dayBarWidth + space)*i + dayBarWidth/2, chartYStart+chartHeight-normalActiveDaysValues[i] + 20, numCommits, "text-anchor:middle;fill:rgb(220,220,220)")
+		canvas.Rect(chartXStart+space+(dayBarWidth+space)*i, chartYStart+chartHeight-normalActiveDaysValues[i], dayBarWidth, normalActiveDaysValues[i], barStyle)
+		canvas.Text(chartXStart+space+(dayBarWidth+space)*i+dayBarWidth/2, chartYStart+chartHeight-normalActiveDaysValues[i]+normalActiveDaysValues[i]-10, day, barTextStyle)
+		canvas.Text(chartXStart+space+(dayBarWidth+space)*i+dayBarWidth/2, chartYStart+chartHeight-normalActiveDaysValues[i]+20, numCommits, barTextStyle)
 	}
 
 	//hourly activity chart
-	hourBarWidth := (chartWidth-space) / 4 - space
+	hourBarWidth := (chartWidth-space)/4 - space
 	chartYStart = chartYStart + chartHeight + chartBuffer
-	canvas.Rect(chartXStart, chartYStart, chartWidth, chartHeight, "fill:rgb(140,140,140)")
-	canvas.Text(chartXStart + chartWidth/2, chartYStart+20, "Hourly Commits", "fill:rgb(220,220,220);text-anchor:middle;font-size:18")
+	canvas.Rect(chartXStart, chartYStart, chartWidth, chartHeight, chartBackgroundStyle)
+	canvas.Text(chartXStart+chartWidth/2, chartYStart+20, "Commits per Time of Day", chartTextStyle)
 	var activeHoursValues []int
-	for _, day := range activeHours{
+	for _, day := range activeHours {
 		activeHoursValues = append(activeHoursValues, day)
 	}
 	normalActiveHoursValues := normaliseRange(activeHoursValues, 100, chartHeight-chartBuffer)
 	for i := range normalActiveHoursValues {
 		numCommits := strconv.Itoa(activeHoursValues[i])
 		hour := hours[i]
-		canvas.Rect(chartXStart+space+(hourBarWidth + space)*i, chartYStart+chartHeight-normalActiveHoursValues[i], hourBarWidth, normalActiveHoursValues[i], "fill:rgb(51,78,78")
-		canvas.Text(chartXStart+space+(hourBarWidth + space)*i + hourBarWidth/2, chartYStart+chartHeight-normalActiveHoursValues[i] + normalActiveHoursValues[i]-10, hour, "text-anchor:middle;fill:rgb(220,220,220)")
-		canvas.Text(chartXStart+space+(hourBarWidth + space)*i + hourBarWidth/2, chartYStart+chartHeight-normalActiveHoursValues[i] + 20, numCommits, "text-anchor:middle;fill:rgb(220,220,220)")
+		canvas.Rect(chartXStart+space+(hourBarWidth+space)*i, chartYStart+chartHeight-normalActiveHoursValues[i], hourBarWidth, normalActiveHoursValues[i], barStyle)
+		canvas.Text(chartXStart+space+(hourBarWidth+space)*i+hourBarWidth/2, chartYStart+chartHeight-normalActiveHoursValues[i]+normalActiveHoursValues[i]-10, hour, barTextStyle)
+		canvas.Text(chartXStart+space+(hourBarWidth+space)*i+hourBarWidth/2, chartYStart+chartHeight-normalActiveHoursValues[i]+20, numCommits, barTextStyle)
 	}
 
+	//legend
+	legendBuffer := 50
+	legendXStart := maxX + legendBuffer
+	legendYStart := chartBuffer
+	legendWidth := width - legendXStart - legendBuffer
+	legendHeight := height - legendBuffer*2
+
+	legendTextYStart := legendBuffer * 3
+	legendTextXStart := legendXStart + 10
+	indexWidth := 30
+	languageWidth := 90
+	nameWidth := legendWidth - indexWidth - languageWidth - 20
+	lineHeight := 40
+	canvas.Rect(legendXStart, legendYStart, legendWidth, legendHeight, chartBackgroundStyle)
+
+	legendTextStyle := "fill:rgb(220,220,220);text-anchor:middle;font-size:30"
+	legendLineTextStyle := "fill:rgb(51,78,78);font-size:20"
+
+	canvas.Text(legendXStart+legendWidth/2, legendYStart+36, "Legend", legendTextStyle)
+	canvas.Text(legendTextXStart+indexWidth, legendTextYStart, "Name", legendLineTextStyle)
+	canvas.Text(legendTextXStart+indexWidth+nameWidth, legendTextYStart, "Language", legendLineTextStyle)
+
+	for i, repo := range repoList {
+		strI := strconv.Itoa(i + 1)
+		canvas.Text(legendTextXStart, legendTextYStart+(lineHeight*(i+1)), strI, legendLineTextStyle)
+		canvas.Text(legendTextXStart+indexWidth, legendTextYStart+(lineHeight*(i+1)), repo.Name, legendLineTextStyle)
+		canvas.Text(legendTextXStart+indexWidth+nameWidth, legendTextYStart+(lineHeight*(i+1)), repo.Language, legendLineTextStyle)
+	}
 	canvas.End()
 }
