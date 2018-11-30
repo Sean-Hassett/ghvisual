@@ -6,13 +6,15 @@ import (
 	"log"
 	"math"
 	"net/http"
+	"strconv"
 	"time"
 )
 
 const width = 1920
 const height = 1080
 const bgShade = 180
-const startingOffset = 10
+const buffer = 40
+const degreeToRadian = 0.0174533
 
 func main() {
 	http.Handle("/", http.HandlerFunc(draw))
@@ -71,6 +73,7 @@ func draw(w http.ResponseWriter, req *http.Request) {
 	canvas.Start(width, height)
 	canvas.Rect(0, 0, width, height, canvas.RGB(bgShade, bgShade, bgShade))
 	deepSkyBlue := []float64{0.0, 104.0, 139.0}
+	orange := []int{255, 199, 92}
 
 	// map number of commits per day
 	var activeDays = map[string]int{
@@ -100,6 +103,8 @@ func draw(w http.ResponseWriter, req *http.Request) {
 	radius := 0.0
 	for _, repo := range repoList {
 		daysSinceUpdate = append(daysSinceUpdate, int(((time.Now().Sub(repo.Updated.Time)).Hours())/24))
+		fmt.Println(repo.Name)
+		fmt.Println(repo.Updated)
 
 		for _, commit := range repo.Commits {
 			switch commit.Date.Weekday() {
@@ -131,26 +136,29 @@ func draw(w http.ResponseWriter, req *http.Request) {
 			}
 		}
 		diameters = append(diameters, math.Log(float64(repo.Size))*10*2)
-		sumOfDiameters += int(math.Log(float64(repo.Size)))*10*2 + 50
+		sumOfDiameters += int(math.Log(float64(repo.Size)))*10*2 + buffer
 	}
 	normalisedDays := normaliseDaysSinceUpdate(daysSinceUpdate, 1, 180)
-	radius = float64(sumOfDiameters) / (2.0*math.Pi)
-	theta := 0.0
+	radius = float64(sumOfDiameters) / (2.0 * math.Pi)
+	theta := -(buffer / float64(sumOfDiameters) * 360)
 
 	for i, repo := range repoList {
-		brightnessMult := float64(normalisedDays[i])/100.0
+		brightnessMult := float64(normalisedDays[i]) / 100.0
 		circleColor := redistributeRGB([]int{int(deepSkyBlue[0] * brightnessMult), int(deepSkyBlue[1] * brightnessMult), int(deepSkyBlue[2] * brightnessMult)})
 		s := canvas.RGB(int(circleColor[0]), int(circleColor[1]), int(circleColor[2]))
 
 		//angle in radians
-		offset := 50 / float64(sumOfDiameters) * 360
-		theta += offset/2 + (diameters[i]/2 / float64(sumOfDiameters) * 360)
-		angle := theta * 0.0174533
-		fmt.Println(angle)
-		fmt.Println(math.Cos(angle))
-		canvas.Circle(int(radius*math.Cos(angle) + width/2), int(radius*math.Sin(angle) + height/2), int((math.Log(float64(repo.Size))) * 10), s)
-		theta += offset/2 + (diameters[i]/2 / float64(sumOfDiameters) * 360)
+		offset := buffer / float64(sumOfDiameters) * 360
+		theta += offset/2 + (diameters[i] / 2 / float64(sumOfDiameters+560) * 360)
+		angle := theta * degreeToRadian
+
+		xVal := int(radius*math.Cos(angle)+width/2)
+		yVal := int(radius*math.Sin(angle)+height/2)
+		canvas.Circle(xVal, yVal, int((math.Log(float64(repo.Size)))*10), s)
+		canvas.Text(xVal, yVal, strconv.Itoa(i+1), "fill:white")
+
+		theta += offset/2 + (diameters[i] / 2 / float64(sumOfDiameters) * 360)
 	}
-	canvas.Circle(width/2, height/2, int(radius/4))
+	canvas.Circle(width/2, height/2, int(radius/4), canvas.RGB(orange[0], orange[1], orange[2]))
 	canvas.End()
 }
