@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"github.com/ajstarks/svgo"
 	"log"
 	"math"
@@ -13,7 +12,7 @@ import (
 const width = 1920
 const height = 1080
 const bgShade = 180
-const buffer = 40
+const buffer = 20
 const degreeToRadian = 0.0174533
 
 func main() {
@@ -72,7 +71,7 @@ func draw(w http.ResponseWriter, req *http.Request) {
 	canvas := svg.New(w)
 	canvas.Start(width, height)
 	canvas.Rect(0, 0, width, height, canvas.RGB(bgShade, bgShade, bgShade))
-	deepSkyBlue := []float64{0.0, 104.0, 139.0}
+	deepSkyBlue := []float64{126.0, 192.0, 238.0}
 	orange := []int{255, 199, 92}
 
 	// map number of commits per day
@@ -103,8 +102,6 @@ func draw(w http.ResponseWriter, req *http.Request) {
 	radius := 0.0
 	for _, repo := range repoList {
 		daysSinceUpdate = append(daysSinceUpdate, int(((time.Now().Sub(repo.Updated.Time)).Hours())/24))
-		fmt.Println(repo.Name)
-		fmt.Println(repo.Updated)
 
 		for _, commit := range repo.Commits {
 			switch commit.Date.Weekday() {
@@ -135,10 +132,12 @@ func draw(w http.ResponseWriter, req *http.Request) {
 				activeHours["Evening"] += 1
 			}
 		}
-		diameters = append(diameters, math.Log(float64(repo.Size))*10*2)
-		sumOfDiameters += int(math.Log(float64(repo.Size)))*10*2 + buffer
+		diameter := math.Log(float64(repo.Size))*10*2
+		diameters = append(diameters, diameter)
+		sumOfDiameters += int(diameter + buffer)
 	}
-	normalisedDays := normaliseDaysSinceUpdate(daysSinceUpdate, 1, 180)
+
+	normalisedDays := normaliseDaysSinceUpdate(daysSinceUpdate, 1, 100)
 	radius = float64(sumOfDiameters) / (2.0 * math.Pi)
 	theta := -(buffer / float64(sumOfDiameters) * 360)
 
@@ -149,16 +148,20 @@ func draw(w http.ResponseWriter, req *http.Request) {
 
 		//angle in radians
 		offset := buffer / float64(sumOfDiameters) * 360
-		theta += offset/2 + (diameters[i] / 2 / float64(sumOfDiameters+560) * 360)
+		theta += offset/2 + (diameters[i] / 2 / float64(sumOfDiameters) * 360)
 		angle := theta * degreeToRadian
 
 		xVal := int(radius*math.Cos(angle)+width/2)
 		yVal := int(radius*math.Sin(angle)+height/2)
+		canvas.Line(xVal, yVal, width/2, height/2, "fill:black:weight:2")
 		canvas.Circle(xVal, yVal, int((math.Log(float64(repo.Size)))*10), s)
-		canvas.Text(xVal, yVal, strconv.Itoa(i+1), "fill:white")
+		canvas.Text(xVal, yVal+4, strconv.Itoa(i+1), "fill:white;text-anchor:middle")
+		canvas.Line(123, 123, width/2, height/2, "fill:black:weight:2")
 
 		theta += offset/2 + (diameters[i] / 2 / float64(sumOfDiameters) * 360)
+
 	}
-	canvas.Circle(width/2, height/2, int(radius/4), canvas.RGB(orange[0], orange[1], orange[2]))
+	canvas.Circle(width/2, height/2, int(radius/2), canvas.RGB(orange[0], orange[1], orange[2]))
+	canvas.Text(width/2, height/2+20, config.Username, "fill:black;text-anchor:middle;font-size:40px")
 	canvas.End()
 }
