@@ -25,9 +25,9 @@ func main() {
 }
 
 // normalise a list of values into the range specified by the upper and lower bounds
-func normaliseRange(list_in []int, lower, upper int) []int {
-	min, max := list_in[0], list_in[0]
-	for _, day := range list_in {
+func normaliseRange(listIn []int, lower, upper int) []int {
+	min, max := listIn[0], listIn[0]
+	for _, day := range listIn {
 		if day > max {
 			max = day
 		}
@@ -36,8 +36,8 @@ func normaliseRange(list_in []int, lower, upper int) []int {
 		}
 	}
 
-	var normalisedDays = []int{}
-	for _, day := range list_in {
+	var normalisedDays []int
+	for _, day := range listIn {
 		normalisedDays = append(normalisedDays, int(float64(lower+(day-min)*(upper-lower)/(max-min))))
 	}
 	return normalisedDays
@@ -90,6 +90,7 @@ func draw(w http.ResponseWriter, req *http.Request) {
 	// Afternoon: 12:00pm-5:59pm
 	// Evening: 6:00pm-11:59pm
 	// Night: 12:00am-5:59am
+	var hours = []string{"Morning", "Afternoon", "Evening", "Night"}
 	var activeHours = []int{0, 0, 0, 0}
 	Morning := 0
 	Afternoon := 1
@@ -158,24 +159,26 @@ func draw(w http.ResponseWriter, req *http.Request) {
 		yVal := int(radius*math.Sin(angle)+height/2)
 		canvas.Line(xVal, yVal, width/2, height/2, "stroke:black")
 		canvas.Circle(xVal, yVal, int((math.Log(float64(repo.Size)))*10), s)
-		canvas.Text(xVal, yVal+4, strconv.Itoa(i+1), "fill:white;text-anchor:middle")
+		canvas.Text(xVal, yVal+4, strconv.Itoa(i+1), "fill:rgb(220,220,220);text-anchor:middle")
 
 		theta += offset/2 + (diameters[i] / 2 / float64(sumOfDiameters) * degrees)
 
 	}
 	canvas.Circle(width/2, height/2, int(radius/2), canvas.RGB(userColor[0], userColor[1], userColor[2]))
-	canvas.Text(width/2, height/2+20, config.Username, "fill:black;text-anchor:middle;font-size:40px")
+	canvas.Text(width/2, height/2+20, config.Username, "fill:rgb(23,31,31);text-anchor:middle;font-size:40px")
 
+	// daily activity chart
 	chartBuffer := 50
 	chartXStart := chartBuffer
 	chartYStart := chartBuffer
 	chartWidth := minX - chartBuffer*2
-	chartHeight := height/2 - (chartBuffer)
+	chartHeight := height/2 - (chartBuffer*3/2)
 	space := 10
 
 	dayBarWidth := (chartWidth-space) / 7 - space
 	canvas.Rect(chartXStart, chartYStart, chartWidth, chartHeight, "fill:rgb(140,140,140)")
-	activeDaysValues := []int{}
+	canvas.Text(chartXStart + chartWidth/2, chartYStart+20, "Daily Commits", "fill:rgb(220,220,220);text-anchor:middle;font-size:18")
+	var activeDaysValues []int
 	for _, day := range activeDays{
 		activeDaysValues = append(activeDaysValues, day)
 	}
@@ -187,5 +190,24 @@ func draw(w http.ResponseWriter, req *http.Request) {
 		canvas.Text(chartXStart+space+(dayBarWidth + space)*i + dayBarWidth/2, chartYStart+chartHeight-normalActiveDaysValues[i] + normalActiveDaysValues[i]-10, day, "text-anchor:middle;fill:rgb(220,220,220)")
 		canvas.Text(chartXStart+space+(dayBarWidth + space)*i + dayBarWidth/2, chartYStart+chartHeight-normalActiveDaysValues[i] + 20, numCommits, "text-anchor:middle;fill:rgb(220,220,220)")
 	}
+
+	//hourly activity chart
+	hourBarWidth := (chartWidth-space) / 4 - space
+	chartYStart = chartYStart + chartHeight + chartBuffer
+	canvas.Rect(chartXStart, chartYStart, chartWidth, chartHeight, "fill:rgb(140,140,140)")
+	canvas.Text(chartXStart + chartWidth/2, chartYStart+20, "Hourly Commits", "fill:rgb(220,220,220);text-anchor:middle;font-size:18")
+	var activeHoursValues []int
+	for _, day := range activeHours{
+		activeHoursValues = append(activeHoursValues, day)
+	}
+	normalActiveHoursValues := normaliseRange(activeHoursValues, 100, chartHeight-chartBuffer)
+	for i := range normalActiveHoursValues {
+		numCommits := strconv.Itoa(activeHoursValues[i])
+		hour := hours[i]
+		canvas.Rect(chartXStart+space+(hourBarWidth + space)*i, chartYStart+chartHeight-normalActiveHoursValues[i], hourBarWidth, normalActiveHoursValues[i], "fill:rgb(51,78,78")
+		canvas.Text(chartXStart+space+(hourBarWidth + space)*i + hourBarWidth/2, chartYStart+chartHeight-normalActiveHoursValues[i] + normalActiveHoursValues[i]-10, hour, "text-anchor:middle;fill:rgb(220,220,220)")
+		canvas.Text(chartXStart+space+(hourBarWidth + space)*i + hourBarWidth/2, chartYStart+chartHeight-normalActiveHoursValues[i] + 20, numCommits, "text-anchor:middle;fill:rgb(220,220,220)")
+	}
+
 	canvas.End()
 }
