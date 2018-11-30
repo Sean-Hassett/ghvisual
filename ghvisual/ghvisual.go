@@ -237,7 +237,7 @@ func draw(w http.ResponseWriter, req *http.Request) {
 	canvas.Rect(legendXStart, legendYStart, legendWidth, legendHeight, chartBackgroundStyle)
 
 	legendTextStyle := "fill:rgb(220,220,220);text-anchor:middle;font-size:30"
-	legendLineTextStyle := "fill:rgb(51,78,78);font-size:20"
+	legendLineTextStyle := "fill:rgb(28,40,40);font-size:20"
 
 	canvas.Text(legendXStart+legendWidth/2, legendYStart+36, "Legend", legendTextStyle)
 	canvas.Text(legendTextXStart+indexWidth, legendTextYStart, "Name", legendLineTextStyle)
