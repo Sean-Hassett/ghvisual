@@ -11,12 +11,12 @@ import (
 
 const width = 1920
 const height = 1080
-const offset = 10
 const bgShade = 180
+const startingOffset = 10
 
 func main() {
 	http.Handle("/", http.HandlerFunc(draw))
-	err := http.ListenAndServe(":8081", nil)
+	err := http.ListenAndServe(":8082", nil)
 	if err != nil {
 		log.Fatal("ListenAndServe:", err)
 	}
@@ -67,7 +67,6 @@ func redistributeRGB(rgb []int) []int {
 
 func draw(w http.ResponseWriter, req *http.Request) {
 	repoList := Retrieve()
-	off := offset
 	canvas := svg.New(w)
 	canvas.Start(width, height)
 	canvas.Rect(0, 0, width, height, canvas.RGB(bgShade, bgShade, bgShade))
@@ -75,13 +74,13 @@ func draw(w http.ResponseWriter, req *http.Request) {
 
 	// map number of commits per day
 	var activeDays = map[string]int{
-		"Monday": 0,
-		"Tuesday": 0,
+		"Monday":    0,
+		"Tuesday":   0,
 		"Wednesday": 0,
-		"Thursday": 0,
-		"Friday": 0,
-		"Saturday": 0,
-		"Sunday": 0,
+		"Thursday":  0,
+		"Friday":    0,
+		"Saturday":  0,
+		"Sunday":    0,
 	}
 	// map number of commits to time of day
 	// Morning: 6:00am-11:59am
@@ -89,13 +88,16 @@ func draw(w http.ResponseWriter, req *http.Request) {
 	// Evening: 6:00pm-11:59pm
 	// Night: 12:00am-5:59am
 	var activeHours = map[string]int{
-		"Morning": 0,
+		"Morning":   0,
 		"Afternoon": 0,
-		"Evening": 0,
-		"Night": 0,
+		"Evening":   0,
+		"Night":     0,
 	}
 
-	var daysSinceUpdate = []int{}
+	var daysSinceUpdate []int
+	var diameters []float64
+	sumOfDiameters := 0
+	radius := 0.0
 	for _, repo := range repoList {
 		daysSinceUpdate = append(daysSinceUpdate, int(((time.Now().Sub(repo.Updated.Time)).Hours())/24))
 
@@ -128,17 +130,27 @@ func draw(w http.ResponseWriter, req *http.Request) {
 				activeHours["Evening"] += 1
 			}
 		}
+		diameters = append(diameters, math.Log(float64(repo.Size))*10*2)
+		sumOfDiameters += int(math.Log(float64(repo.Size)))*10*2 + 50
 	}
-	fmt.Println(activeDays)
-	fmt.Println(activeHours)
-	normalisedDays := normaliseDaysSinceUpdate(daysSinceUpdate, 1, 150)
+	normalisedDays := normaliseDaysSinceUpdate(daysSinceUpdate, 1, 180)
+	radius = float64(sumOfDiameters) / (2.0*math.Pi)
+	theta := 0.0
 
 	for i, repo := range repoList {
-		mult := 0.3 + float64(normalisedDays[i])/100.0
-		circleColor := redistributeRGB([]int{int(deepSkyBlue[0] * mult), int(deepSkyBlue[1] * mult), int(deepSkyBlue[2] * mult)})
+		brightnessMult := float64(normalisedDays[i])/100.0
+		circleColor := redistributeRGB([]int{int(deepSkyBlue[0] * brightnessMult), int(deepSkyBlue[1] * brightnessMult), int(deepSkyBlue[2] * brightnessMult)})
 		s := canvas.RGB(int(circleColor[0]), int(circleColor[1]), int(circleColor[2]))
-		canvas.Circle(off+int(math.Log(float64(repo.Size)))*10, height/2, int(math.Log(float64(repo.Size)))*10, s)
-		off += ((int(math.Log(float64(repo.Size))) * 10) * 2) + offset
+
+		//angle in radians
+		offset := 50 / float64(sumOfDiameters) * 360
+		theta += offset/2 + (diameters[i]/2 / float64(sumOfDiameters) * 360)
+		angle := theta * 0.0174533
+		fmt.Println(angle)
+		fmt.Println(math.Cos(angle))
+		canvas.Circle(int(radius*math.Cos(angle) + width/2), int(radius*math.Sin(angle) + height/2), int((math.Log(float64(repo.Size))) * 10), s)
+		theta += offset/2 + (diameters[i]/2 / float64(sumOfDiameters) * 360)
 	}
+	canvas.Circle(width/2, height/2, int(radius/4))
 	canvas.End()
 }
