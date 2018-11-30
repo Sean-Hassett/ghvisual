@@ -18,7 +18,7 @@ const degreeToRadian = 0.0174533
 
 func main() {
 	http.Handle("/", http.HandlerFunc(draw))
-	err := http.ListenAndServe(":8081", nil)
+	err := http.ListenAndServe(":8080", nil)
 	if err != nil {
 		log.Fatal("ListenAndServe:", err)
 	}

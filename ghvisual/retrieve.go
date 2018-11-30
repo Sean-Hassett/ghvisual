@@ -58,7 +58,7 @@ func Retrieve() []Repo {
 	}
 
 	// list all repositories for the authenticated user
-	repos, _, err := client.Repositories.List(ctx, "", nil)
+	repos, _, err := client.Repositories.List(ctx, config.Username, nil)
 
 	var repoList []Repo
 
