@@ -17,7 +17,6 @@ var config Configuration
 
 type Configuration struct {
 	Username string
-	Email    string
 	Token    string
 }
 type Commit struct {
@@ -30,7 +29,6 @@ type Repo struct {
 	Owner     string
 	Size      int
 	Updated   github.Timestamp
-	Languages map[string]int
 	Commits   []Commit
 }
 
@@ -66,7 +64,6 @@ func Retrieve() []Repo {
 	i := 0
 	for _, repo := range repos {
 		if !*repo.Fork {
-			languages, _, err := client.Repositories.ListLanguages(ctx, config.Username, *repo.Name)
 			if err != nil {
 				fmt.Println(err)
 			}
@@ -74,8 +71,7 @@ func Retrieve() []Repo {
 			repoList = append(repoList, Repo{Name: *repo.Name,
 				Owner:     *repo.Owner.Login,
 				Size:      *repo.Size,
-				Updated:   *repo.UpdatedAt,
-				Languages: languages})
+				Updated:   *repo.UpdatedAt})
 
 			for {
 				commits, resp, err := client.Repositories.ListCommits(ctx, config.Username, *repo.Name, commitsOpt)
