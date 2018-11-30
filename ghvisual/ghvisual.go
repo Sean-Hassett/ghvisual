@@ -72,10 +72,11 @@ func draw(w http.ResponseWriter, req *http.Request) {
 	canvas := svg.New(w)
 	canvas.Start(width, height)
 	canvas.Rect(0, 0, width, height, canvas.RGB(bgShade, bgShade, bgShade))
-	repoColor := []float64{127.0, 191.0, 191.0}
-	userColor := []int{255, 192, 76}
+	repoColor := []float64{79.0, 125.0, 125.0}
+	userColor := []int{253, 183, 125}
 
 	// map number of commits per day
+	var days = []string{"Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"}
 	var activeDays = []int{0, 0, 0, 0, 0, 0, 0}
 	Monday := 0
 	Tuesday := 1
@@ -136,7 +137,7 @@ func draw(w http.ResponseWriter, req *http.Request) {
 		sumOfDiameters += int(diameter + buffer)
 	}
 
-	normalisedDays := normaliseRange(daysSinceUpdate, 5, 60)
+	normalisedDays := normaliseRange(daysSinceUpdate, 30, 90)
 	radius = float64(sumOfDiameters) / (2.0 * math.Pi)
 	theta := -(buffer / float64(sumOfDiameters) * degrees)
 	minX := width
@@ -180,8 +181,11 @@ func draw(w http.ResponseWriter, req *http.Request) {
 	}
 	normalActiveDaysValues := normaliseRange(activeDaysValues, 100, chartHeight-chartBuffer)
 	for i := range normalActiveDaysValues {
-		p := ""
+		numCommits := strconv.Itoa(activeDaysValues[i])
+		day := days[i]
 		canvas.Rect(chartXStart+space+(dayBarWidth + space)*i, chartYStart+chartHeight-normalActiveDaysValues[i], dayBarWidth, normalActiveDaysValues[i], "fill:rgb(51,78,78")
+		canvas.Text(chartXStart+space+(dayBarWidth + space)*i + dayBarWidth/2, chartYStart+chartHeight-normalActiveDaysValues[i] + normalActiveDaysValues[i]-10, day, "text-anchor:middle;fill:rgb(220,220,220)")
+		canvas.Text(chartXStart+space+(dayBarWidth + space)*i + dayBarWidth/2, chartYStart+chartHeight-normalActiveDaysValues[i] + 20, numCommits, "text-anchor:middle;fill:rgb(220,220,220)")
 	}
 	canvas.End()
 }
