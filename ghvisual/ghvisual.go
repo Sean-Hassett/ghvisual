@@ -13,6 +13,7 @@ const width = 1920
 const height = 1080
 const bgShade = 180
 const buffer = 20
+const degrees = 360
 const degreeToRadian = 0.0174533
 
 func main() {
@@ -21,6 +22,11 @@ func main() {
 	if err != nil {
 		log.Fatal("ListenAndServe:", err)
 	}
+}
+
+// simple rounding function
+func Round(x, unit float64) float64 {
+	return math.Round(x/unit) * unit
 }
 
 // normalise the daysSinceUpdate value for each repo into the range specified by the upper and lower bounds
@@ -37,7 +43,7 @@ func normaliseDaysSinceUpdate(days []int, lower, upper int) []int {
 
 	var normalisedDays = []int{}
 	for _, day := range days {
-		normalisedDays = append(normalisedDays, int(lower+(day-min)*(upper-lower)/(max-min)))
+		normalisedDays = append(normalisedDays, int(Round(float64(lower+(day-min)*(upper-lower)/(max-min)), 5)))
 	}
 	return normalisedDays
 }
@@ -71,8 +77,8 @@ func draw(w http.ResponseWriter, req *http.Request) {
 	canvas := svg.New(w)
 	canvas.Start(width, height)
 	canvas.Rect(0, 0, width, height, canvas.RGB(bgShade, bgShade, bgShade))
-	deepSkyBlue := []float64{126.0, 192.0, 238.0}
-	orange := []int{255, 199, 92}
+	repoColor := []float64{127.0, 191.0, 191.0}
+	userColor := []int{255, 192, 76}
 
 	// map number of commits per day
 	var activeDays = map[string]int{
@@ -137,18 +143,18 @@ func draw(w http.ResponseWriter, req *http.Request) {
 		sumOfDiameters += int(diameter + buffer)
 	}
 
-	normalisedDays := normaliseDaysSinceUpdate(daysSinceUpdate, 1, 100)
+	normalisedDays := normaliseDaysSinceUpdate(daysSinceUpdate, 5, 60)
 	radius = float64(sumOfDiameters) / (2.0 * math.Pi)
-	theta := -(buffer / float64(sumOfDiameters) * 360)
+	theta := -(buffer / float64(sumOfDiameters) * degrees)
 
 	for i, repo := range repoList {
-		brightnessMult := float64(normalisedDays[i]) / 100.0
-		circleColor := redistributeRGB([]int{int(deepSkyBlue[0] * brightnessMult), int(deepSkyBlue[1] * brightnessMult), int(deepSkyBlue[2] * brightnessMult)})
+		brightnessMult := float64(normalisedDays[i]) / 60.0
+		circleColor := redistributeRGB([]int{int(repoColor[0] * brightnessMult), int(repoColor[1] * brightnessMult), int(repoColor[2] * brightnessMult)})
 		s := canvas.RGB(int(circleColor[0]), int(circleColor[1]), int(circleColor[2]))
 
 		//angle in radians
-		offset := buffer / float64(sumOfDiameters) * 360
-		theta += offset/2 + (diameters[i] / 2 / float64(sumOfDiameters) * 360)
+		offset := buffer / float64(sumOfDiameters) * degrees
+		theta += offset/2 + (diameters[i] / 2 / float64(sumOfDiameters) * degrees)
 		angle := theta * degreeToRadian
 
 		xVal := int(radius*math.Cos(angle)+width/2)
@@ -156,12 +162,12 @@ func draw(w http.ResponseWriter, req *http.Request) {
 		canvas.Line(xVal, yVal, width/2, height/2, "fill:black:weight:2")
 		canvas.Circle(xVal, yVal, int((math.Log(float64(repo.Size)))*10), s)
 		canvas.Text(xVal, yVal+4, strconv.Itoa(i+1), "fill:white;text-anchor:middle")
-		canvas.Line(123, 123, width/2, height/2, "fill:black:weight:2")
 
-		theta += offset/2 + (diameters[i] / 2 / float64(sumOfDiameters) * 360)
+		theta += offset/2 + (diameters[i] / 2 / float64(sumOfDiameters) * degrees)
 
 	}
-	canvas.Circle(width/2, height/2, int(radius/2), canvas.RGB(orange[0], orange[1], orange[2]))
+	canvas.Circle(width/2, height/2, int(radius/2), canvas.RGB(userColor[0], userColor[1], userColor[2]))
 	canvas.Text(width/2, height/2+20, config.Username, "fill:black;text-anchor:middle;font-size:40px")
+	canvas.Line(0, height/2, width, height/2)
 	canvas.End()
 }
