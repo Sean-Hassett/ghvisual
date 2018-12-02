@@ -2,7 +2,7 @@
 
 ## Introduction
 
-![alt text](https://raw.githubusercontent.com/Sean-Hassett/ghvisual/master/images/screen.png)
+![alt text](images/screen.png)
 
 View data about the activity of a GitHub User.
 
@@ -32,7 +32,7 @@ repos, _, err := client.Repositories.List(ctx, "", nil)
 ```
 
 This means it will default to the User that the access token is associated with and will include private activity if the token has access.
-Changing the Username in the config to an empty string won't work since that value is used in other places and  setting the Username to the account that the token is associated with won't pull in private activity even if the token has access to it.
+Changing the Username in the config to an empty string won't work since that value is used in other places and  setting the Username to the account that the token is associated with won't pull in private activity even if the token has access to it so for now the awkward solution is the only one.
 
 ## Install & Run
 
