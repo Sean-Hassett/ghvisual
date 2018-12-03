@@ -1,8 +1,8 @@
 # GHVisual
 
-## Introduction
-
 ![alt text](images/screen.png)
+
+## Overview
 
 View data about the activity of a GitHub User.
 
@@ -33,6 +33,28 @@ repos, _, err := client.Repositories.List(ctx, "", nil)
 
 This means it will default to the User that the access token is associated with and will include private activity if the token has access.
 Changing the Username in the config to an empty string won't work since that value is used in other places and  setting the Username to the account that the token is associated with won't pull in private activity even if the token has access to it so for now the awkward solution is the only one.
+
+## To Do
+
+#### Timelapse
+
+Originally I wanted to do a timelapse starting on the day the User created their GitHub account and proceeding to the present day.
+The idea was that you could see your work on GitHub grow day by day, with the repos appearing, disappearing and changing size as time went by.
+
+I think this would look really interesting and would also reveal patterns of activity.
+For example if you were rewriting a lot of code you would see your commits going up but your repos not changing size very much.
+
+The main problem I faced with this was the difficulty in getting the size of a repo at the time of each commit.
+The only way I could see was to iterate through the file structure for each commmit counting up the size of each individual file and this would probably result in hitting the rate limit very fast.
+
+#### Weights
+
+I also had an idea to attempt to model how many lines of code it took to solve a problem in different languages and use this to weight the size of the repos depending on what language they were predominantly written in.
+
+My plan for this was to take public repos where people solve problems from sites such as Hackerrank and Project Euler. With these repos, you would have examples of people solving the very same problems using different languages and you could compare to see the difference in size of the solutions.
+This doesn't factor in different approaches to problem solving and different coding styles but I thought it would be interesting to see even a crude comparison.
+
+I managed to locate some repos which would have served the purpose well but since it would have been fairly tedious and uninteresting to parse through the different naming conventions used to automatically gather the data, I ended up leaving it to one side and not coming back to it.
 
 ## Install & Run
 
